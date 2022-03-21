@@ -1,25 +1,24 @@
 {
   "configurations": [
-    {
-      "defines": [
-        "ID=\"qounters-minus\"",
-        "VERSION=\"1.1.3-r1\"",
-        "__GNUC__",
-        "__aarch64__"
-      ],
-      "includePath": [
-        "${workspaceFolder}/**",
-        "${workspaceFolder}/shared",
-        "${workspaceFolder}/include",
-        "${workspaceFolder}/extern/**",
-        "${workspaceFolder}/extern/libil2cpp/il2cpp/libil2cpp",
-        "c:/dev/android-ndk-r22b/**"
-      ],
-      "name": "Quest",
-      "cStandard": "c11",
-      "cppStandard": "c++20",
-      "intelliSenseMode": "clang-x64"
-    }
+      {
+          "defines": [
+              "__GNUC__",
+              "__aarch64__",
+              "VERSION=\"0.0.1\"",
+              "ID=\"playlistmanager\""
+          ],
+          "includePath": [
+              "${workspaceFolder}/**",
+              "${workspaceFolder}/include/**",
+              "${workspaceFolder}/shared/**",
+              "${workspaceFolder}/extern/**"
+          ],
+          "name": "Quest",
+          "cStandard": "c11",
+          "cppStandard": "c++20",
+          "intelliSenseMode": "clang-x64",
+          "compileCommands": "${workspaceFolder}/build/compile_commands.json"
+      }
   ],
   "version": 4
 }
