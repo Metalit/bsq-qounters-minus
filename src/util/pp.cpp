@@ -28,8 +28,8 @@ const std::string PP_DATA_URI = "https://cdn.pulselane.dev/raw_pp.json";
 
 void QountersMinus::PP::Initialize() {
     LOG_CALLER;
-    request = UnityEngine::Networking::UnityWebRequest::Get(il2cpp_utils::createcsstr(PP_DATA_URI));
-    request->SetRequestHeader(il2cpp_utils::createcsstr("User-Agent"), il2cpp_utils::createcsstr(std::string(ID) + " " + VERSION));
+    request = UnityEngine::Networking::UnityWebRequest::Get(PP_DATA_URI);
+    request->SetRequestHeader("User-Agent", ID " " VERSION);
     request->SendWebRequest()->add_completed(il2cpp_utils::MakeDelegate<DownloadCompleteDelegate>(
         classof(DownloadCompleteDelegate), (void*)nullptr, QountersMinus::PP::HandleWebRequestCompleted
     ));

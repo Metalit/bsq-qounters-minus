@@ -1,6 +1,5 @@
 #pragma once
 
-#include "modloader/shared/modloader.hpp"
 #include "beatsaber-hook/shared/utils/logging.hpp"
 
 Logger& getLogger();

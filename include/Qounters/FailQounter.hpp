@@ -21,7 +21,7 @@ DECLARE_CLASS_CUSTOM(QountersMinus::Qounters, FailQounter, QountersMinus::Qounte
     static float Distance;
     static bool ShowRestartsInstead;
 
-    static Il2CppString* prevBeatmapHash;
+    static std::string prevBeatmapHash;
     static int restarts;
     DECLARE_INSTANCE_FIELD_DEFAULT(int, count, 0);
     DECLARE_INSTANCE_FIELD_DEFAULT(float, animationTimer, 10.0f);

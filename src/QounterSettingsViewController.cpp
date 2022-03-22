@@ -8,9 +8,8 @@ void StartTestLevel(QountersMinus::QounterSettingsViewController* self) {
     auto simpleLevelStarters = UnityEngine::Resources::FindObjectsOfTypeAll<GlobalNamespace::SimpleLevelStarter*>();
     for (int i = 0; i < simpleLevelStarters->Length(); i++) {
         auto starter = simpleLevelStarters->values[i];
-        if (starter->get_gameObject()->get_name()->Contains(il2cpp_utils::createcsstr("PerformanceTestLevelButton"))) {
-            starter->level->set_name(il2cpp_utils::createcsstr("Qounters- Test"));
-            starter->gameplayModifiers->demoNoObstacles = true;
+        if (starter->get_gameObject()->get_name()->Contains("PerformanceTestLevelButton")) {
+            starter->level->set_name("Qounters- Test");
             starter->StartLevel();
             return;
         }
@@ -18,7 +17,7 @@ void StartTestLevel(QountersMinus::QounterSettingsViewController* self) {
 }
 
 UnityEngine::GameObject* CreateContentView(UnityEngine::Transform* parent) {
-    static auto name = il2cpp_utils::createcsstr("QountersMinusSettingsContainer", il2cpp_utils::StringType::Manual);
+    static ConstString name("QountersMinusSettingsContainer");
     auto scrollContainer = QuestUI::BeatSaberUI::CreateScrollableSettingsContainer(parent);
     auto scrollContainerScrollerRect = scrollContainer->get_transform()->get_parent()->get_parent()->get_parent()->GetComponent<UnityEngine::RectTransform*>();
     scrollContainerScrollerRect->set_anchoredPosition(UnityEngine::Vector2(22.0f, 0.0f));
@@ -39,7 +38,7 @@ void QountersMinus::QounterSettingsViewController::DidActivate(bool firstActivat
     for (auto key : QountersMinus::QounterRegistry::registryInsertionOrder) {
         auto def = QountersMinus::QounterRegistry::registry[key];
         QuestUI::BeatSaberUI::CreateUIButton(navigationContainer->get_transform(), def.shortName, [=]() {
-            auto existingContainer = UnityEngine::GameObject::Find(il2cpp_utils::createcsstr("QountersMinusSettingsContainer"));
+            auto existingContainer = UnityEngine::GameObject::Find("QountersMinusSettingsContainer");
             if (existingContainer) UnityEngine::Object::Destroy(existingContainer);
             CreateQounterConfigView(get_transform(), def.longName, key.first, key.second, def.configMetadata);
         });
@@ -75,9 +74,7 @@ void HandleEnumSettingChanged(QountersMinus::QounterRegistry::ConfigMetadata* me
     if (intVal < 0) intVal = meta->enumNumElements - (intVal * -1);
     *(int*)meta->ptr = intVal;
     QountersMinus::SaveConfig();
-    reinterpret_cast<QuestUI::IncrementSetting*>(meta->uiElementPtr)->Text->SetText(
-        il2cpp_utils::createcsstr(meta->enumDisplayNames[intVal])
-    );
+    reinterpret_cast<QuestUI::IncrementSetting*>(meta->uiElementPtr)->Text->SetText(meta->enumDisplayNames[intVal]);
 }
 void HandleColorSettingChanged(QountersMinus::QounterRegistry::ConfigMetadata* meta, UnityEngine::Color val, GlobalNamespace::ColorChangeUIEventType eventType) {
     *(UnityEngine::Color*)meta->ptr = val;
@@ -149,7 +146,7 @@ void QountersMinus::QounterSettingsViewController::CreateQounterConfigView(
             );
             increment->OnValueChange = [=](float val) { HandleEnumSettingChanged(fieldConfig.get(), val); };
             fieldConfig->uiElementPtr = increment;
-            increment->Text->SetText(il2cpp_utils::createcsstr(fieldConfig->enumDisplayNames[*(int*)fieldConfig->ptr]));
+            increment->Text->SetText(fieldConfig->enumDisplayNames[*(int*)fieldConfig->ptr]);
             gameObject = increment->get_gameObject();
         } else if (fieldConfig->type == QountersMinus::QounterRegistry::ConfigType::Color) {
             gameObject = QuestUI::BeatSaberUI::CreateColorPicker(

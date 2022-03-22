@@ -83,5 +83,5 @@ void QountersMinus::Qounters::Spinometer::Update() {
         nextText = "<color=" + SpeedToColor(leftSpeed) + ">" + std::to_string((int)roundf(leftSpeed)) + "</color> - " +
                    "<color=" + SpeedToColor(rightSpeed) + ">" + std::to_string((int)roundf(rightSpeed)) + "</color>";
     }
-    basicText->set_text(il2cpp_utils::createcsstr(nextText));
+    basicText->set_text(nextText);
 }

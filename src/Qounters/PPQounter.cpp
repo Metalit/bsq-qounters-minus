@@ -27,8 +27,6 @@ void QountersMinus::Qounters::PPQounter::Register() {
 
 GlobalNamespace::GameplayModifiers* RemovePositiveModifiers(GlobalNamespace::GameplayModifiers* modifiers) {
     return GlobalNamespace::GameplayModifiers::New_ctor(
-        modifiers->demoNoFail,
-        modifiers->demoNoObstacles,
         modifiers->energyType,
         modifiers->noFailOn0Energy,
         modifiers->instaFail,
@@ -38,9 +36,9 @@ GlobalNamespace::GameplayModifiers* RemovePositiveModifiers(GlobalNamespace::Gam
         modifiers->fastNotes,
         modifiers->strictAngles,
         false, // disappearingArrows
-        (modifiers->songSpeed == GlobalNamespace::GameplayModifiers::SongSpeed::Faster)
-            ? (GlobalNamespace::GameplayModifiers::SongSpeed)GlobalNamespace::GameplayModifiers::SongSpeed::Normal
-            : modifiers->songSpeed,
+        (modifiers->songSpeed != GlobalNamespace::GameplayModifiers::SongSpeed::Slower)
+            ? GlobalNamespace::GameplayModifiers::SongSpeed::Normal
+            : GlobalNamespace::GameplayModifiers::SongSpeed::Slower,
         modifiers->noArrows,
         false, // ghostNotes
         false, // proMode
@@ -87,6 +85,6 @@ void QountersMinus::Qounters::PPQounter::OnScoreUpdated(int modifiedScore) {
     if (maxPP > 0.0f) {
         auto accuracy = refs->relativeScoreAndImmediateRankCounter->relativeScore * multiplier;
         auto currentPP = QountersMinus::PP::CalculatePP(maxPP, accuracy);
-        basicText->set_text(il2cpp_utils::createcsstr("PP: " + FormatNumber(currentPP, 2)));
+        basicText->set_text("PP: " + FormatNumber(currentPP, 2));
     }
 }

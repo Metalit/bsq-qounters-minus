@@ -9,7 +9,7 @@
 #include "questui/shared/BeatSaberUI.hpp"
 
 #include "GlobalNamespace/ScoreModel.hpp"
-#include "GlobalNamespace/ISaberSwingRatingCounter.hpp"
+#include "GlobalNamespace/CutScoreBuffer.hpp"
 #include "System/Collections/Generic/List_1.hpp"
 
 DECLARE_CLASS_CUSTOM(QountersMinus::Qounters, CutQounter, QountersMinus::Qounter,
@@ -26,6 +26,6 @@ DECLARE_CLASS_CUSTOM(QountersMinus::Qounters, CutQounter, QountersMinus::Qounter
 
     DECLARE_STATIC_METHOD(void, Register);
     DECLARE_INSTANCE_METHOD(void, Start);
-    DECLARE_INSTANCE_METHOD(void, OnSwingRatingFinished, GlobalNamespace::NoteCutInfo* info, GlobalNamespace::ISaberSwingRatingCounter* swingRatingCounter, float cutDistanceToCenter);
+    DECLARE_INSTANCE_METHOD(void, OnSwingRatingFinished, GlobalNamespace::CutScoreBuffer* scoreBuffer);
     DECLARE_INSTANCE_METHOD(void, UpdateCutScores);
 )

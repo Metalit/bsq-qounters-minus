@@ -71,8 +71,7 @@ void QountersMinus::Qounters::PBQounter::Register() {
 }
 
 void QountersMinus::Qounters::PBQounter::Start() {
-    int noteCount = GetNoteCount();
-    int maxRawScore = GlobalNamespace::ScoreModel::MaxRawScoreForNumberOfNotes(noteCount);
+    int maxRawScore = GetMaxMultipliedScore();
 
     maxPossibleScore = GlobalNamespace::ScoreModel::GetModifiedScoreForGameplayModifiersScoreMultiplier(
         maxRawScore,
@@ -101,9 +100,9 @@ void QountersMinus::Qounters::PBQounter::Start() {
 
 void QountersMinus::Qounters::PBQounter::SetPersonalBest(float ratioOfMaxScore) {
     if (HideFirstScore && highScore == 0) {
-        pbText->set_text(il2cpp_utils::createcsstr("PB: --"));
+        pbText->set_text("PB: --");
     } else {
-        pbText->set_text(il2cpp_utils::createcsstr("PB: " + FormatNumber(ratioOfMaxScore * 100.0f, DecimalPrecision) + "%"));
+        pbText->set_text("PB: " + FormatNumber(ratioOfMaxScore * 100.0f, DecimalPrecision) + "%");
     }
 }
 

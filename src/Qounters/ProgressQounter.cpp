@@ -37,7 +37,7 @@ void QountersMinus::Qounters::ProgressQounter::Register() {
 }
 
 HMUI::ImageView* CreateRing(UnityEngine::Transform* parent) {
-    auto imageGameObject = UnityEngine::GameObject::New_ctor(il2cpp_utils::createcsstr("QountersMinusRingImage"));
+    auto imageGameObject = UnityEngine::GameObject::New_ctor("QountersMinusRingImage");
     imageGameObject->AddComponent<UnityEngine::RectTransform*>();
     imageGameObject->get_transform()->SetParent(parent, false);
     HMUI::ImageView* newImage = imageGameObject->AddComponent<HMUI::ImageView*>();
@@ -115,18 +115,18 @@ void QountersMinus::Qounters::ProgressQounter::Update() {
     ) {
         if (Mode == static_cast<int>(QountersMinus::ProgressQounterMode::TimeInBeats)) {
             auto beats = std::roundf(songBPM / 60 * time / 0.25f) * 0.25f;
-            basicText->set_text(il2cpp_utils::createcsstr(FormatNumber(beats, 2)));
+            basicText->set_text(FormatNumber(beats, 2));
         } else {
             int minutes = std::floor((int)time / 60);
             int seconds = std::floor((int)time % 60);
-            basicText->set_text(il2cpp_utils::createcsstr(
+            basicText->set_text(
                 (minutes < 10 ? "0" : "") + std::to_string(minutes) + ":" +
                 (seconds < 10 ? "0" : "") + std::to_string(seconds)
-            ));
+            );
         }
         progressRing->set_fillAmount((IncludeRing ? time : audioTimeSyncController->songTime) / length);
         progressRing->SetVerticesDirty();
     } else {
-        basicText->set_text(il2cpp_utils::createcsstr(FormatNumber(100.0f * time / length, 2) + "%"));
+        basicText->set_text(FormatNumber(100.0f * time / length, 2) + "%");
     }
 }

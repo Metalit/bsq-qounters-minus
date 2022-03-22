@@ -7,7 +7,7 @@ const std::vector<QounterRegistry::EventHandlerSignature> QounterRegistry::event
     {QounterRegistry::Event::NoteMiss, "OnNoteMiss", 1},
     {QounterRegistry::Event::ScoreUpdated, "OnScoreUpdated", 1},
     {QounterRegistry::Event::MaxScoreUpdated, "OnMaxScoreUpdated", 1},
-    {QounterRegistry::Event::SwingRatingFinished, "OnSwingRatingFinished", 3},
+    {QounterRegistry::Event::SwingRatingFinished, "OnSwingRatingFinished", 1},
 };
 std::unordered_map<std::pair<std::string, std::string>, QounterRegistry::RegistryEntry, pair_hash> QounterRegistry::registry;
 std::vector<std::pair<std::string, std::string>> QounterRegistry::registryInsertionOrder;
@@ -20,7 +20,7 @@ void _DeactivateChildren(UnityEngine::GameObject* gameObject) {
 }
 
 void _DeactivateChildren(std::string gameObjectName) {
-    _DeactivateChildren(UnityEngine::GameObject::Find(il2cpp_utils::createcsstr(gameObjectName)));
+    _DeactivateChildren(UnityEngine::GameObject::Find(gameObjectName));
 }
 
 
@@ -43,8 +43,8 @@ void QountersMinus::QounterRegistry::Initialize() {
     if (!Qounter::Enabled) return;
     if (UnityEngine::Object::FindObjectOfType<PlayerDataModel*>()->playerData->playerSpecificSettings->noTextsAndHuds) return;
 
-    auto comboPanel = UnityEngine::GameObject::Find(il2cpp_utils::createcsstr("ComboPanel"));
-    auto multiplierCanvas = UnityEngine::GameObject::Find(il2cpp_utils::createcsstr("MultiplierCanvas"));
+    auto comboPanel = UnityEngine::GameObject::Find("ComboPanel");
+    auto multiplierCanvas = UnityEngine::GameObject::Find("MultiplierCanvas");
 
     if (Qounter::DisableIn90Degree) {
         // hacky way of getting BeatmapCharacteristic
@@ -64,8 +64,8 @@ void QountersMinus::QounterRegistry::Initialize() {
         UnityEngine::Transform* transforms[4] = {
             comboPanel->get_transform(),
             multiplierCanvas->get_transform(),
-            UnityEngine::GameObject::Find(il2cpp_utils::createcsstr("ScoreCanvas"))->get_transform(),
-            UnityEngine::GameObject::Find(il2cpp_utils::createcsstr("SongProgressCanvas"))->get_transform()
+            UnityEngine::GameObject::Find("ScoreCanvas")->get_transform(),
+            UnityEngine::GameObject::Find("SongProgressCanvas")->get_transform()
         };
         for (auto transform : transforms) {
             transform->set_eulerAngles(UnityEngine::Vector3::get_zero());

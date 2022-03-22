@@ -24,7 +24,7 @@ void QountersMinus::Qounters::MissedQounter::Start() {
 }
 
 void QountersMinus::Qounters::MissedQounter::UpdateValue() {
-    basicText->set_text(il2cpp_utils::createcsstr(std::to_string(misses)));
+    basicText->set_text(std::to_string(misses));
 }
 
 void QountersMinus::Qounters::MissedQounter::OnNoteCut(GlobalNamespace::NoteData* data, GlobalNamespace::NoteCutInfo* info) {

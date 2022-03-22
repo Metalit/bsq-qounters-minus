@@ -21,7 +21,7 @@ struct QounterPositionData {
     bool distanceIsDown;
 };
 
-std::unordered_map<QountersMinus::QounterPosition, QounterPositionData> QounterPositionData = {
+std::unordered_map<QountersMinus::QounterPosition, QounterPositionData> QounterPositions = {
     {QountersMinus::QounterPosition::BelowCombo, {"ComboPanel", UnityEngine::Vector2(-4.0f, 12.0f), true}},
     {QountersMinus::QounterPosition::AboveCombo, {"ComboPanel", UnityEngine::Vector2(-4.0f, 40.0f), false}},
     {QountersMinus::QounterPosition::BelowMultiplier, {"MultiplierCanvas", UnityEngine::Vector2(0.0f, 12.0f), true}},
@@ -38,7 +38,7 @@ void DeactivateChildren(UnityEngine::GameObject* gameObject) {
 }
 
 void DeactivateChildren(std::string gameObjectName) {
-    DeactivateChildren(UnityEngine::GameObject::Find(il2cpp_utils::createcsstr(gameObjectName)));
+    DeactivateChildren(UnityEngine::GameObject::Find(gameObjectName));
 }
 
 // super slow way to find inactive game objects
@@ -52,13 +52,13 @@ UnityEngine::GameObject* GetGameObject(std::string name) {
 }
 
 UnityEngine::GameObject* GetParent(QountersMinus::QounterPosition position) {
-    auto containerName = il2cpp_utils::createcsstr("QountersMinus_Container" + std::to_string((int)position));
+    auto containerName = "QountersMinus_Container" + std::to_string((int) position);
     auto containerGO = UnityEngine::GameObject::Find(containerName);
     if (!containerGO) {
         // TODO: this is slow
         auto coreGameHUDController = UnityEngine::Object::FindObjectOfType<GlobalNamespace::CoreGameHUDController*>();
-        auto parentGO = coreGameHUDController->get_gameObject()->Find(il2cpp_utils::createcsstr(QounterPositionData[position].parentName));
-        // parentGO = GetGameObject(QounterPositionData[position].parentName);
+        auto parentGO = coreGameHUDController->get_gameObject()->Find(QounterPositions[position].parentName);
+        // parentGO = GetGameObject(QounterPositions[position].parentName);
         if (!parentGO->get_activeSelf()) {
             DeactivateChildren(parentGO);
             parentGO->SetActive(true);
@@ -66,11 +66,11 @@ UnityEngine::GameObject* GetParent(QountersMinus::QounterPosition position) {
         containerGO = UnityEngine::GameObject::New_ctor(containerName);
         auto rect = containerGO->AddComponent<UnityEngine::RectTransform*>();
         containerGO->get_transform()->SetParent(parentGO->get_transform(), false);
-        auto anchoredPosition = QounterPositionData[position].anchoredPosition;
+        auto anchoredPosition = QounterPositions[position].anchoredPosition;
         if (position == QountersMinus::QounterPosition::BelowCombo || position == QountersMinus::QounterPosition::AboveCombo) {
-            anchoredPosition.y *= 1.0f + (QountersMinus::Qounter::ComboOffset * distanceUnit * distanceUnitOffsetMult * (QounterPositionData[position].distanceIsDown ? -1.0f : 1.0f));
+            anchoredPosition.y *= 1.0f + (QountersMinus::Qounter::ComboOffset * distanceUnit * distanceUnitOffsetMult * (QounterPositions[position].distanceIsDown ? -1.0f : 1.0f));
         } else if (position == QountersMinus::QounterPosition::BelowMultiplier || position == QountersMinus::QounterPosition::AboveMultiplier) {
-            anchoredPosition.y *= 1.0f + (QountersMinus::Qounter::MultiplierOffset * distanceUnit * distanceUnitOffsetMult * (QounterPositionData[position].distanceIsDown ? -1.0f : 1.0f));
+            anchoredPosition.y *= 1.0f + (QountersMinus::Qounter::MultiplierOffset * distanceUnit * distanceUnitOffsetMult * (QounterPositions[position].distanceIsDown ? -1.0f : 1.0f));
         // } else {
         //     auto parentPosition = parentGO->get_transform()->get_position();
         //     anchoredPosition.x += parentPosition.x * -100.0f;
@@ -86,8 +86,8 @@ UnityEngine::GameObject* GetParent(QountersMinus::QounterPosition position) {
 }
 
 void SetPosition(UnityEngine::Transform* transform, QountersMinus::QounterPosition position, float distance) {
-    const auto mult = QounterPositionData[position].distanceIsDown ? -1.0f : 1.0f;
-    const auto pivot = UnityEngine::Vector2(0.5f, QounterPositionData[position].distanceIsDown ? 1.0f : 0.0f);
+    const auto mult = QounterPositions[position].distanceIsDown ? -1.0f : 1.0f;
+    const auto pivot = UnityEngine::Vector2(0.5f, QounterPositions[position].distanceIsDown ? 1.0f : 0.0f);
     const auto anchoredPosition = UnityEngine::Vector2(0.0f, distance * distanceUnit * mult);
     reinterpret_cast<UnityEngine::RectTransform*>(transform)->set_pivot(pivot);
     reinterpret_cast<UnityEngine::RectTransform*>(transform)->set_anchoredPosition(anchoredPosition);
@@ -101,7 +101,7 @@ QountersMinus::Qounter* QountersMinus::Qounter::Initialize(System::Type* type, Q
 }
 
 void QountersMinus::Qounter::Awake() {
-    static auto gameObjectName = il2cpp_utils::createcsstr("QountersMinus_Qounter", il2cpp_utils::StringType::Manual);
+    static ConstString gameObjectName("QountersMinus_Qounter");
     gameObject = UnityEngine::GameObject::New_ctor(gameObjectName);
     gameObject->get_transform()->SetParent(get_transform(), false);
     gameObject->AddComponent<UnityEngine::RectTransform*>();

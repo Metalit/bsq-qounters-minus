@@ -1,81 +1,83 @@
 #include "hooks.hpp"
 
-using namespace QountersMinus;
+#include "util/logger.hpp"
+#include "util/pp.hpp"
+#include "config.hpp"
+#include "QounterRegistry.hpp"
+#include "Qounter.hpp"
 
-MAKE_HOOK_MATCH(CoreGameHUDController_Start, &GlobalNamespace::CoreGameHUDController::Start, void, GlobalNamespace::CoreGameHUDController* self) {
+#include "beatsaber-hook/shared/utils/hooking.hpp"
+
+#include "GlobalNamespace/CoreGameHUDController.hpp"
+#include "GlobalNamespace/ScoreController.hpp"
+#include "GlobalNamespace/NoteController.hpp"
+#include "GlobalNamespace/BeatmapObjectManager_NoteWasCutDelegate.hpp"
+#include "GlobalNamespace/CutScoreBuffer.hpp"
+#include "GlobalNamespace/QuestAppInit.hpp"
+#include "System/Action_2.hpp"
+#include "System/Action_1.hpp"
+
+using namespace QountersMinus;
+using namespace GlobalNamespace;
+
+typedef BeatmapObjectManager::NoteWasCutDelegate* NoteWasCutDelegate;
+typedef System::Action_1<NoteController*>* NoteWasMissedDelegate;
+typedef System::Action_2<int, int>* ScoreChangeDelegate;
+
+MAKE_HOOK_MATCH(CoreGameHUDController_Start, &CoreGameHUDController::Start,
+        void, CoreGameHUDController* self) {
     LOG_CALLER;
+
     CoreGameHUDController_Start(self);
+
     QounterRegistry::Initialize();
 }
 
-MAKE_HOOK_MATCH(ScoreController_Start, &GlobalNamespace::ScoreController::Start, void, GlobalNamespace::ScoreController* self) {
+MAKE_HOOK_MATCH(ScoreController_Start, &ScoreController::Start,
+        void, ScoreController* self) {
     LOG_CALLER;
+
     ScoreController_Start(self);
-    self->add_noteWasCutEvent(il2cpp_utils::MakeDelegate<GlobalNamespace::NoteWasCutDelegate*>(
-        classof(GlobalNamespace::NoteWasCutDelegate*), self, +[](GlobalNamespace::ScoreController* self, GlobalNamespace::NoteData* data, GlobalNamespace::NoteCutInfo* info, int unused) {
-            QounterRegistry::BroadcastEvent(QounterRegistry::Event::NoteCut, data, info);
+
+    self->beatmapObjectManager->add_noteWasCutEvent(il2cpp_utils::MakeDelegate<NoteWasCutDelegate>(
+        classof(NoteWasCutDelegate), self, +[](ScoreController* self, NoteController* noteController, NoteCutInfo* info) {
+            QounterRegistry::BroadcastEvent(QounterRegistry::Event::NoteCut, noteController->noteData, info);
         }
     ));
-    self->add_noteWasMissedEvent(il2cpp_utils::MakeDelegate<NoteMissDelegate>(
-        classof(NoteMissDelegate), self, +[](GlobalNamespace::ScoreController* self, GlobalNamespace::NoteData* data, int unused) {
-            QounterRegistry::BroadcastEvent(QounterRegistry::Event::NoteMiss, data);
+    self->beatmapObjectManager->add_noteWasMissedEvent(il2cpp_utils::MakeDelegate<NoteWasMissedDelegate>(
+        classof(NoteWasMissedDelegate), self, +[](ScoreController* self, NoteController* noteController) {
+            QounterRegistry::BroadcastEvent(QounterRegistry::Event::NoteMiss, noteController->noteData);
         }
     ));
     self->add_scoreDidChangeEvent(il2cpp_utils::MakeDelegate<ScoreChangeDelegate>(
-        classof(ScoreChangeDelegate), self, +[](GlobalNamespace::ScoreController* self, int rawScore, int modifiedScore) {
+        classof(ScoreChangeDelegate), self, +[](ScoreController* self, int rawScore, int modifiedScore) {
             QounterRegistry::BroadcastEvent(QounterRegistry::Event::ScoreUpdated, modifiedScore);
         }
     ));
-    self->add_immediateMaxPossibleScoreDidChangeEvent(il2cpp_utils::MakeDelegate<ScoreChangeDelegate>(
-        classof(ScoreChangeDelegate), self, +[](GlobalNamespace::ScoreController* self, int rawScore, int modifiedScore) {
-            QounterRegistry::BroadcastEvent(QounterRegistry::Event::MaxScoreUpdated, modifiedScore);
-        }
-    ));
+    // self->add_immediateMaxPossibleScoreDidChangeEvent(il2cpp_utils::MakeDelegate<ScoreChangeDelegate>(
+    //     classof(ScoreChangeDelegate), self, +[](ScoreController* self, int rawScore, int modifiedScore) {
+    //         QounterRegistry::BroadcastEvent(QounterRegistry::Event::MaxScoreUpdated, modifiedScore);
+    //     }
+    // ));
 }
 
-std::map<GlobalNamespace::ISaberSwingRatingCounter*, GlobalNamespace::NoteCutInfo> noteCutInfos;
-
-MAKE_HOOK_MATCH(
-    CutScoreHandler_Set,
-    &GlobalNamespace::BeatmapObjectExecutionRatingsRecorder_CutScoreHandler::Set,
-    void,
-    GlobalNamespace::BeatmapObjectExecutionRatingsRecorder_CutScoreHandler* self,
-    ByRef<GlobalNamespace::NoteCutInfo> noteCutInfo,
-    GlobalNamespace::NoteExecutionRating* noteExecutionRating,
-    GlobalNamespace::ISaberSwingRatingCounter* swingRatingCounter
-) {
-    noteCutInfos[swingRatingCounter] = noteCutInfo.heldRef;
-    CutScoreHandler_Set(self, noteCutInfo, noteExecutionRating, swingRatingCounter);
+MAKE_HOOK_MATCH(CutScoreBuffer_HandleSaberSwingRatingCounterDidFinish, &CutScoreBuffer::HandleSaberSwingRatingCounterDidFinish,
+        void, CutScoreBuffer* self, ISaberSwingRatingCounter* swingRatingCounter) {
+    
+    CutScoreBuffer_HandleSaberSwingRatingCounterDidFinish(self, swingRatingCounter);
+    
+    QounterRegistry::BroadcastEvent(QounterRegistry::Event::SwingRatingFinished, self);
 }
 
-MAKE_HOOK_MATCH(
-    CutScoreHandler_HandleSaberSwingRatingCounterDidFinish,
-    &GlobalNamespace::BeatmapObjectExecutionRatingsRecorder_CutScoreHandler::HandleSaberSwingRatingCounterDidFinish,
-    void,
-    GlobalNamespace::BeatmapObjectExecutionRatingsRecorder_CutScoreHandler* self,
-    GlobalNamespace::ISaberSwingRatingCounter* swingRatingCounter
-) {
-    CutScoreHandler_HandleSaberSwingRatingCounterDidFinish(self, swingRatingCounter);
-    QounterRegistry::BroadcastEvent(
-        QounterRegistry::Event::SwingRatingFinished,
-        noteCutInfos[swingRatingCounter],
-        swingRatingCounter,
-        self->cutDistanceToCenter
-    );
-    noteCutInfos.erase(swingRatingCounter);
-}
-
-MAKE_HOOK_MATCH(
-    QuestAppInit_AppStartAndMultiSceneEditorSetup,
-    &GlobalNamespace::QuestAppInit::AppStartAndMultiSceneEditorSetup,
-    void,
-    GlobalNamespace::QuestAppInit* self
-) {
+MAKE_HOOK_MATCH(QuestAppInit_AppStartAndMultiSceneEditorSetup, &QuestAppInit::AppStartAndMultiSceneEditorSetup,
+        void, QuestAppInit* self) {
+    
     QuestAppInit_AppStartAndMultiSceneEditorSetup(self);
 
     // Defer config loading to this point to give Custom Qounters a chance to register
     LOG_DEBUG("Loading config");
-    if (!QountersMinus::LoadConfig()) QountersMinus::SaveConfig();
+    if(!QountersMinus::LoadConfig())
+        QountersMinus::SaveConfig();
 
     PP::Initialize();
 }
@@ -83,7 +85,6 @@ MAKE_HOOK_MATCH(
 void QountersMinus::InstallHooks() {
     INSTALL_HOOK(getLogger(), CoreGameHUDController_Start);
     INSTALL_HOOK(getLogger(), ScoreController_Start);
-    INSTALL_HOOK(getLogger(), CutScoreHandler_Set);
-    INSTALL_HOOK(getLogger(), CutScoreHandler_HandleSaberSwingRatingCounterDidFinish);
+    INSTALL_HOOK(getLogger(), CutScoreBuffer_HandleSaberSwingRatingCounterDidFinish);
     INSTALL_HOOK(getLogger(), QuestAppInit_AppStartAndMultiSceneEditorSetup);
 }

@@ -41,7 +41,7 @@ void QountersMinus::Qounters::NotesQounter::UpdateValue() {
     if (ShowPercentage) {
         text += " - " + FormatNumber((100.0f * goodCuts) / allCuts, DecimalPrecision) + "%";
     }
-    basicText->set_text(il2cpp_utils::createcsstr(text));
+    basicText->set_text(text);
 }
 
 void QountersMinus::Qounters::NotesQounter::OnNoteCut(GlobalNamespace::NoteData* data, GlobalNamespace::NoteCutInfo* info) {

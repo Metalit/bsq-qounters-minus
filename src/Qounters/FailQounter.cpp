@@ -8,7 +8,7 @@ float QountersMinus::Qounters::FailQounter::Distance = 0.0f;
 bool QountersMinus::Qounters::FailQounter::ShowRestartsInstead = true;
 
 int QountersMinus::Qounters::FailQounter::restarts = 0;
-Il2CppString* QountersMinus::Qounters::FailQounter::prevBeatmapHash = nullptr;
+std::string QountersMinus::Qounters::FailQounter::prevBeatmapHash;
 
 void QountersMinus::Qounters::FailQounter::Register() {
     QounterRegistry::Register<FailQounter>("Fail", "Fail Qounter", "FailConfig", true);
@@ -28,12 +28,12 @@ void QountersMinus::Qounters::FailQounter::Start() {
     auto currentBeatmapHash = songID.hash + "_" + std::to_string(songID.difficulty);
 
     if (ShowRestartsInstead) {
-        if (prevBeatmapHash != nullptr && to_utf8(csstrtostr(prevBeatmapHash)) == currentBeatmapHash) {
+        if (prevBeatmapHash == currentBeatmapHash) {
             restarts++;
             count = restarts;
         } else {
             restarts = count = 0;
-            prevBeatmapHash = il2cpp_utils::createcsstr(currentBeatmapHash, il2cpp_utils::StringType::Manual);
+            prevBeatmapHash = currentBeatmapHash;
         }
     } else {
         count = refs->playerData->playerAllOverallStatsData->get_allOverallStatsData()->failedLevelsCount;
@@ -41,7 +41,7 @@ void QountersMinus::Qounters::FailQounter::Start() {
         gameEnergyCounter->add_gameEnergyDidReach0Event(il2cpp_utils::MakeDelegate<System::Action*>(
             classof(System::Action*), this, +[](QountersMinus::Qounters::FailQounter* self) {
                 self->count += 1;
-                self->basicText->set_text(il2cpp_utils::createcsstr(std::to_string(self->count)));
+                self->basicText->set_text(std::to_string(self->count));
                 self->animationTimer = 0.0f;
             }
         ));
