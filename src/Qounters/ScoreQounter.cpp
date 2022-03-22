@@ -96,7 +96,7 @@ void QountersMinus::Qounters::ScoreQounter::Register() {
 }
 
 void logRecursive(UnityEngine::GameObject* obj, std::string path) {
-    auto name = path + "/" + to_utf8(csstrtostr(obj->get_name()));
+    auto name = path + "/" + static_cast<std::string>(obj->get_name());
     LOG_DEBUG(name);
     for (int i = 0; i < obj->get_transform()->get_childCount(); i++) {
         logRecursive(obj->get_transform()->GetChild(i)->get_gameObject(), name);

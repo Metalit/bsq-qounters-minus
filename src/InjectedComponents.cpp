@@ -24,13 +24,13 @@ void QountersMinus::InjectedComponents::Awake() {
 
         auto gameplayCoreInstallers = UnityEngine::Resources::FindObjectsOfTypeAll<GlobalNamespace::GameplayCoreInstaller*>();
         GlobalNamespace::GameplayCoreInstaller* gameplayCoreInstaller;
-        for (int i = 0; i < gameplayCoreInstallers->Length(); i++) {
-            if (gameplayCoreInstallers->values[i]->get_isActiveAndEnabled() && gameplayCoreInstallers->values[i]->sceneSetupData != nullptr) {
-                gameplayCoreInstaller = gameplayCoreInstallers->values[i];
+        for (auto& installer : gameplayCoreInstallers) {
+            if (installer->get_isActiveAndEnabled() && installer->sceneSetupData != nullptr) {
+                gameplayCoreInstaller = installer;
                 break;
             }
         }
-        if (!gameplayCoreInstaller) gameplayCoreInstaller = gameplayCoreInstallers->values[0];
+        if (!gameplayCoreInstaller) gameplayCoreInstaller = gameplayCoreInstallers[0];
         difficultyBeatmap = gameplayCoreInstaller->sceneSetupData->difficultyBeatmap;
         beatmapCharacteristic = difficultyBeatmap->get_parentDifficultyBeatmapSet()->get_beatmapCharacteristic();
     }

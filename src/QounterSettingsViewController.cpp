@@ -6,8 +6,7 @@ using namespace QountersMinus;
 
 void StartTestLevel(QountersMinus::QounterSettingsViewController* self) {
     auto simpleLevelStarters = UnityEngine::Resources::FindObjectsOfTypeAll<GlobalNamespace::SimpleLevelStarter*>();
-    for (int i = 0; i < simpleLevelStarters->Length(); i++) {
-        auto starter = simpleLevelStarters->values[i];
+    for (auto& starter : simpleLevelStarters) {
         if (starter->get_gameObject()->get_name()->Contains("PerformanceTestLevelButton")) {
             starter->level->set_name("Qounters- Test");
             starter->StartLevel();

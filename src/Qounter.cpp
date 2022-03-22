@@ -45,8 +45,8 @@ void DeactivateChildren(std::string gameObjectName) {
 // sometimes, the position parent objects are not active immediately after CoreGameHUD.Start
 UnityEngine::GameObject* GetGameObject(std::string name) {
     auto allObjects = UnityEngine::Resources::FindObjectsOfTypeAll<UnityEngine::GameObject*>();
-    for (int i = 0; i < allObjects->Length(); i++) {
-        if (to_utf8(csstrtostr(allObjects->values[i]->get_name())) == name) return allObjects->values[i];
+    for (auto& object : allObjects) {
+        if (object->get_name() == name) return object;
     }
     return nullptr;
 }

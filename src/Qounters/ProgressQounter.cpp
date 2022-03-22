@@ -43,9 +43,9 @@ HMUI::ImageView* CreateRing(UnityEngine::Transform* parent) {
     HMUI::ImageView* newImage = imageGameObject->AddComponent<HMUI::ImageView*>();
     static UnityEngine::Material* noGlowMat;
     auto materials = UnityEngine::Resources::FindObjectsOfTypeAll<UnityEngine::Material*>();
-    for (int i = 0; i < materials->Length(); i++) {
-        if (to_utf8(csstrtostr(materials->values[i]->get_name())) == "UINoGlow") {
-            noGlowMat = materials->values[i];
+    for (auto& material : materials) {
+        if (material->get_name() == "UINoGlow") {
+            noGlowMat = material;
             break;
         }
     }
@@ -53,9 +53,9 @@ HMUI::ImageView* CreateRing(UnityEngine::Transform* parent) {
     newImage->set_material(noGlowMat);
     static UnityEngine::Sprite* multiplierImageSprite;
     auto sprites = UnityEngine::Resources::FindObjectsOfTypeAll<UnityEngine::Sprite*>();
-    for (int i = 0; i < sprites->Length(); i++) {
-        if (to_utf8(csstrtostr(sprites->values[i]->get_name())) == "Circle") {
-            multiplierImageSprite = sprites->values[i];
+    for (auto& sprite : sprites) {
+        if (sprite->get_name() == "Circle") {
+            multiplierImageSprite = sprite;
             break;
         }
     }

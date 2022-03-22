@@ -48,9 +48,9 @@ void QountersMinus::PP::Initialize() {
 
 void QountersMinus::PP::HandleWebRequestCompleted() {
     LOG_CALLER;
-    auto response = to_utf8(csstrtostr(request->get_downloadHandler()->GetText()));
+    auto response = request->get_downloadHandler()->GetText();
     rapidjson::Document document;
-    document.Parse(response.c_str());
+    document.Parse(response);
 
     for (auto itr = document.MemberBegin(); itr != document.MemberEnd(); ++itr) {
         RawPPData data;

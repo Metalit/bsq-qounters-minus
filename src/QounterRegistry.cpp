@@ -25,7 +25,7 @@ void _DeactivateChildren(std::string gameObjectName) {
 
 
 void logScales(UnityEngine::GameObject* go, std::string path) {
-    auto name = path + "/" + to_utf8(csstrtostr(go->get_name()));
+    auto name = path + "/" + static_cast<std::string>(go->get_name());
     auto scale = go->get_transform()->get_localScale();
     LOG_DEBUG(name + ": %.2f, %.2f, %.2f", scale.x, scale.y, scale.z);
 
@@ -88,10 +88,10 @@ void QountersMinus::QounterRegistry::Initialize() {
 
     if (Qounter::ItalicText) {
         auto qounters = UnityEngine::Resources::FindObjectsOfTypeAll<Qounter*>();
-        for (int i = 0; i < qounters->Length(); i++) {
-            auto texts = qounters->values[i]->GetComponentsInChildren<TMPro::TextMeshProUGUI*>();
-            for (int j = 0; j < texts->Length(); j++) {
-                texts->values[j]->set_fontStyle(TMPro::FontStyles::Italic);
+        for (auto& qounter : qounters) {
+            auto texts = qounter->GetComponentsInChildren<TMPro::TextMeshProUGUI*>();
+            for (auto& text : texts) {
+                text->set_fontStyle(TMPro::FontStyles::Italic);
             }
         }
     }

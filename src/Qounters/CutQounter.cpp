@@ -71,15 +71,15 @@ void Qounters::CutQounter::UpdateCutScores() {
         rightBeforeSwingSum = 0, rightAfterSwingSum = 0, rightCutDistanceSum = 0, rightCount = 0;
     auto cutScoresArr = cutScores->items;
     for (int i = 0, j = cutScores->get_Count(); i < j; i += 4) {
-        if (cutScoresArr->values[i] == 0) {
-            leftBeforeSwingSum += cutScoresArr->values[i + 1];
-            leftAfterSwingSum += cutScoresArr->values[i + 2];
-            leftCutDistanceSum += cutScoresArr->values[i + 3];
+        if (cutScoresArr[i] == 0) {
+            leftBeforeSwingSum += cutScoresArr[i + 1];
+            leftAfterSwingSum += cutScoresArr[i + 2];
+            leftCutDistanceSum += cutScoresArr[i + 3];
             leftCount += 1;
         } else {
-            rightBeforeSwingSum += cutScoresArr->values[i + 1];
-            rightAfterSwingSum += cutScoresArr->values[i + 2];
-            rightCutDistanceSum += cutScoresArr->values[i + 3];
+            rightBeforeSwingSum += cutScoresArr[i + 1];
+            rightAfterSwingSum += cutScoresArr[i + 2];
+            rightCutDistanceSum += cutScoresArr[i + 3];
             rightCount += 1;
         }
     }
