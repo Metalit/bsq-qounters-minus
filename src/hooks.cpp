@@ -39,26 +39,44 @@ MAKE_HOOK_MATCH(ScoreController_Start, &ScoreController::Start,
 
     ScoreController_Start(self);
 
-    self->beatmapObjectManager->add_noteWasCutEvent(il2cpp_utils::MakeDelegate<NoteWasCutDelegate>(
-        classof(NoteWasCutDelegate), self, +[](ScoreController* self, NoteController* noteController, NoteCutInfo* info) {
-            QounterRegistry::BroadcastEvent(QounterRegistry::Event::NoteCut, noteController->noteData, info);
-        }
-    ));
-    self->beatmapObjectManager->add_noteWasMissedEvent(il2cpp_utils::MakeDelegate<NoteWasMissedDelegate>(
-        classof(NoteWasMissedDelegate), self, +[](ScoreController* self, NoteController* noteController) {
-            QounterRegistry::BroadcastEvent(QounterRegistry::Event::NoteMiss, noteController->noteData);
-        }
-    ));
+    // self->beatmapObjectManager->add_noteWasCutEvent(il2cpp_utils::MakeDelegate<NoteWasCutDelegate>(
+    //     classof(NoteWasCutDelegate), self, +[](ScoreController* self, NoteController* noteController, ByRef<NoteCutInfo> info) {
+    //         QounterRegistry::BroadcastEvent(QounterRegistry::Event::NoteCut, noteController->noteData, &info.heldRef);
+    //     }
+    // ));
+    // self->beatmapObjectManager->add_noteWasMissedEvent(il2cpp_utils::MakeDelegate<NoteWasMissedDelegate>(
+    //     classof(NoteWasMissedDelegate), self, +[](ScoreController* self, NoteController* noteController) {
+    //         QounterRegistry::BroadcastEvent(QounterRegistry::Event::NoteMiss, noteController->noteData);
+    //     }
+    // ));
     self->add_scoreDidChangeEvent(il2cpp_utils::MakeDelegate<ScoreChangeDelegate>(
         classof(ScoreChangeDelegate), self, +[](ScoreController* self, int rawScore, int modifiedScore) {
             QounterRegistry::BroadcastEvent(QounterRegistry::Event::ScoreUpdated, modifiedScore);
         }
     ));
+    // delegate no longer exists, but it seems redundant with scoreDidChange
     // self->add_immediateMaxPossibleScoreDidChangeEvent(il2cpp_utils::MakeDelegate<ScoreChangeDelegate>(
-    //     classof(ScoreChangeDelegate), self, +[](ScoreController* self, int rawScore, int modifiedScore) {
+    //     classof(ScoreChangeDelegate), self, +[](ScoreController* self, int multipliedSccore, int modifiedScore) {
     //         QounterRegistry::BroadcastEvent(QounterRegistry::Event::MaxScoreUpdated, modifiedScore);
     //     }
     // ));
+}
+
+// replacement hooks for delegates
+MAKE_HOOK_MATCH(BeatmapObjectManager_HandleNoteControllerNoteWasCut, &BeatmapObjectManager::HandleNoteControllerNoteWasCut,
+        void, BeatmapObjectManager* self, NoteController* noteController, ByRef<NoteCutInfo> info) {
+    
+    BeatmapObjectManager_HandleNoteControllerNoteWasCut(self, noteController, info);
+
+    QounterRegistry::BroadcastEvent(QounterRegistry::Event::NoteCut, noteController->noteData, &info.heldRef);
+}
+
+MAKE_HOOK_MATCH(BeatmapObjectManager_HandleNoteControllerNoteWasMissed, &BeatmapObjectManager::HandleNoteControllerNoteWasMissed,
+        void, BeatmapObjectManager* self, NoteController* noteController) {
+    
+    BeatmapObjectManager_HandleNoteControllerNoteWasMissed(self, noteController);
+
+    QounterRegistry::BroadcastEvent(QounterRegistry::Event::NoteMiss, noteController->noteData);
 }
 
 MAKE_HOOK_MATCH(CutScoreBuffer_HandleSaberSwingRatingCounterDidFinish, &CutScoreBuffer::HandleSaberSwingRatingCounterDidFinish,
@@ -85,6 +103,8 @@ MAKE_HOOK_MATCH(QuestAppInit_AppStartAndMultiSceneEditorSetup, &QuestAppInit::Ap
 void QountersMinus::InstallHooks() {
     INSTALL_HOOK(getLogger(), CoreGameHUDController_Start);
     INSTALL_HOOK(getLogger(), ScoreController_Start);
+    INSTALL_HOOK(getLogger(), BeatmapObjectManager_HandleNoteControllerNoteWasCut);
+    INSTALL_HOOK(getLogger(), BeatmapObjectManager_HandleNoteControllerNoteWasMissed);
     INSTALL_HOOK(getLogger(), CutScoreBuffer_HandleSaberSwingRatingCounterDidFinish);
     INSTALL_HOOK(getLogger(), QuestAppInit_AppStartAndMultiSceneEditorSetup);
 }

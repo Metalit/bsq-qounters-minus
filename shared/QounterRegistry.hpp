@@ -28,7 +28,7 @@ namespace QountersMinus {
                 NoteCut,
                 NoteMiss,
                 ScoreUpdated,
-                MaxScoreUpdated,
+                // MaxScoreUpdated,
                 SwingRatingFinished,
             };
             struct EventHandlerSignature {
