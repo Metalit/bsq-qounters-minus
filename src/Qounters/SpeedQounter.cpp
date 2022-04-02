@@ -99,13 +99,13 @@ void QountersMinus::Qounters::SpeedQounter::Update() {
             case QountersMinus::SpeedQounterMode::SplitAverage:
                 rightSpeeds->Add(refs->saberManager->rightSaber->get_bladeSpeed());
                 leftSpeeds->Add(refs->saberManager->leftSaber->get_bladeSpeed());
-                averageText->set_text(FormatNumber(Average(leftSpeeds), DecimalPrecision) + " | " + FormatNumber(Average(rightSpeeds), DecimalPrecision));
+                averageText->set_text(FormatNumber(Average(leftSpeeds), DecimalPrecision) + "   " + FormatNumber(Average(rightSpeeds), DecimalPrecision));
                 break;
             case QountersMinus::SpeedQounterMode::SplitBoth:
                 fastestSpeeds->Add((refs->saberManager->rightSaber->get_bladeSpeed() + refs->saberManager->leftSaber->get_bladeSpeed()) / 2.0f);
                 rightSpeeds->Add(refs->saberManager->rightSaber->get_bladeSpeed());
                 leftSpeeds->Add(refs->saberManager->leftSaber->get_bladeSpeed());
-                averageText->set_text(FormatNumber(Average(leftSpeeds), DecimalPrecision) + " | " + FormatNumber(Average(rightSpeeds), DecimalPrecision));
+                averageText->set_text(FormatNumber(Average(leftSpeeds), DecimalPrecision) + "   " + FormatNumber(Average(rightSpeeds), DecimalPrecision));
                 break;
         }
     }

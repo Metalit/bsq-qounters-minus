@@ -30,20 +30,31 @@ void QountersMinus::Qounters::NotesLeftQounter::Start() {
     UpdateValue();
 }
 
-void QountersMinus::Qounters::NotesLeftQounter::UpdateValue() {
-    basicText->set_text((LabelAboveCount ? "" : "Notes Remaining: ") + std::to_string(notesLeft));
-}
-
 void QountersMinus::Qounters::NotesLeftQounter::OnNoteCut(GlobalNamespace::NoteData* data, GlobalNamespace::NoteCutInfo* info) {
-    if (data->colorType != GlobalNamespace::ColorType::None) {
+    if (ShouldProcessNote(data)) {
         notesLeft--;
         UpdateValue();
     }
 }
 
 void QountersMinus::Qounters::NotesLeftQounter::OnNoteMiss(GlobalNamespace::NoteData* data) {
-    if (data->colorType != GlobalNamespace::ColorType::None) {
+    if (ShouldProcessNote(data)) {
         notesLeft--;
         UpdateValue();
     }
+}
+
+bool QountersMinus::Qounters::NotesLeftQounter::ShouldProcessNote(GlobalNamespace::NoteData* data) {
+    switch (data->gameplayType) {
+    case GlobalNamespace::NoteData::GameplayType::Normal:
+        return true;
+    case GlobalNamespace::NoteData::GameplayType::BurstSliderHead:
+        return true;
+    default:
+        return false;
+    }
+}
+
+void QountersMinus::Qounters::NotesLeftQounter::UpdateValue() {
+    basicText->set_text((LabelAboveCount ? "" : "Notes Remaining: ") + std::to_string(notesLeft));
 }
