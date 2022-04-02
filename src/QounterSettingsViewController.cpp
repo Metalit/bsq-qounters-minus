@@ -9,6 +9,7 @@ void StartTestLevel(QountersMinus::QounterSettingsViewController* self) {
     for (auto& starter : simpleLevelStarters) {
         if (starter->get_gameObject()->get_name()->Contains("PerformanceTestLevelButton")) {
             starter->level->set_name("Qounters- Test");
+            starter->gameplayModifiers->enabledObstacleType = GlobalNamespace::GameplayModifiers::EnabledObstacleType::NoObstacles;
             starter->StartLevel();
             return;
         }
@@ -54,6 +55,8 @@ void QountersMinus::QounterSettingsViewController::DidActivate(bool firstActivat
     auto testButton = QuestUI::BeatSaberUI::CreateUIButton(get_transform(), "Test", "PlayButton", [&]() { StartTestLevel(this); });
     testButton->GetComponent<UnityEngine::RectTransform*>()->set_anchoredPosition(UnityEngine::Vector2(-52.0f, -27.5f));
     testButton->GetComponent<UnityEngine::RectTransform*>()->set_sizeDelta(UnityEngine::Vector2(27.0f, 10.0f));
+    testButton->set_interactable(false);
+    QuestUI::BeatSaberUI::AddHoverHint(testButton, "Disabled for now due to bugs");
 }
 
 void HandleBoolSettingChanged(QountersMinus::QounterRegistry::ConfigMetadata* meta, bool val) {
