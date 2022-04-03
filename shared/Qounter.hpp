@@ -58,6 +58,7 @@ DECLARE_CLASS_CODEGEN(QountersMinus, Qounter, UnityEngine::MonoBehaviour,
     static bool ItalicText;
     static bool UprightInMultiplayer;
     static bool DisableIn90Degree;
+    static bool FixedHUDPosition;
     static float DistanceStep;
 
     DECLARE_INSTANCE_FIELD(UnityEngine::GameObject*, gameObject);

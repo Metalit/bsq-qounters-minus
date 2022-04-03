@@ -83,6 +83,13 @@ namespace QountersMinus {
             .type = QounterRegistry::ConfigType::Bool,
         });
         QounterRegistry::RegisterConfig<Qounter>({
+            .ptr = &QountersMinus::Qounter::FixedHUDPosition,
+            .field = "FixedHUDPosition",
+            .displayName = "Fixed HUD Position",
+            .helpText = "Locks the height of the HUD to the default, regardless of Environment.",
+            .type = QounterRegistry::ConfigType::Bool,
+        });
+        QounterRegistry::RegisterConfig<Qounter>({
             .ptr = &QountersMinus::Qounter::DistanceStep,
             .field = "DistanceStep",
             .displayName = "Distance Increment",

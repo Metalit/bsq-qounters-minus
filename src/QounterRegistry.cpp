@@ -48,13 +48,19 @@ void QountersMinus::QounterRegistry::Initialize() {
     auto comboPanel = UnityEngine::GameObject::Find("ComboPanel");
     auto multiplierCanvas = UnityEngine::GameObject::Find("MultiplierCanvas");
 
+    // hacky way of getting BeatmapCharacteristic
+    auto refs = comboPanel->AddComponent<QountersMinus::InjectedComponents*>();
+    bool hasRotations = refs->beatmapCharacteristic->containsRotationEvents;
+
     if (Qounter::DisableIn90Degree) {
-        // hacky way of getting BeatmapCharacteristic
-        auto refs = comboPanel->AddComponent<QountersMinus::InjectedComponents*>();
-        if (refs->beatmapCharacteristic->containsRotationEvents) {
+        if (hasRotations) {
             UnityEngine::Object::Destroy(refs);
             return;
         }
+    }
+    if (Qounter::FixedHUDPosition && !hasRotations) {
+        auto hudParent = comboPanel->get_transform()->GetParent()->GetParent();
+        hudParent->set_position({hudParent->get_position().x, 0.4, hudParent->get_position().z});
     }
 
     if (Qounter::HideCombo) _DeactivateChildren(comboPanel);
@@ -77,6 +83,7 @@ void QountersMinus::QounterRegistry::Initialize() {
             transform->set_eulerAngles(UnityEngine::Vector3::get_zero());
             auto position = transform->get_localPosition();
             transform->set_localPosition(UnityEngine::Vector3(position.x, position.y + 1.8f, position.z + 4.0f));
+            transform->get_gameObject()->SetActive(true);
         }
     }
 
