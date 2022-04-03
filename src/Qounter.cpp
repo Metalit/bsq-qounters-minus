@@ -118,7 +118,7 @@ TMPro::TextMeshProUGUI* QountersMinus::Qounter::CreateBasicTitle(std::string tex
     titleText->set_fontSize(27.0f);
     titleText->get_rectTransform()->set_anchoredPosition(UnityEngine::Vector2(0.0f, 0.0f));
     if(Qounter::ItalicText)
-        basicText->set_fontStyle(TMPro::FontStyles::Italic);
+        titleText->set_fontStyle(TMPro::FontStyles::Italic);
     return titleText;
 }
 
