@@ -58,6 +58,10 @@ void QountersMinus::QounterRegistry::Initialize() {
     }
 
     if (Qounter::HideCombo) _DeactivateChildren(comboPanel);
+    else if (Qounter::ItalicText) {
+        for (auto& text : comboPanel->GetComponentsInChildren<TMPro::TextMeshProUGUI*>())
+            text->set_fontStyle(TMPro::FontStyles::Italic);
+    }
     if (Qounter::HideMultiplier) {
         multiplierCanvas->GetComponent<UnityEngine::Animator*>()->set_enabled(false);
         _DeactivateChildren(multiplierCanvas);

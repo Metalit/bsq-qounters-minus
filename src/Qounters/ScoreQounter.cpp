@@ -119,11 +119,15 @@ void QountersMinus::Qounters::ScoreQounter::Start() {
         scoreUIText->set_fontStyle(TMPro::FontStyles::Normal);
         relativeScoreText->set_fontStyle(TMPro::FontStyles::Normal);
         rankText->set_fontStyle(TMPro::FontStyles::Normal);
-        auto localPosition1 = relativeScoreText->get_rectTransform()->get_localPosition();
-        relativeScoreText->get_rectTransform()->set_localPosition(UnityEngine::Vector3(0.0f, localPosition1.y, localPosition1.z));
-        auto localPosition2 = rankText->get_rectTransform()->get_localPosition();
-        rankText->get_rectTransform()->set_localPosition(UnityEngine::Vector3(0.0f, localPosition2.y, localPosition2.z));
+    } else {
+        scoreUIText->set_fontStyle(TMPro::FontStyles::Italic);
+        relativeScoreText->set_fontStyle(TMPro::FontStyles::Italic);
+        rankText->set_fontStyle(TMPro::FontStyles::Italic);
     }
+    auto localPosition1 = relativeScoreText->get_rectTransform()->get_localPosition();
+    relativeScoreText->get_rectTransform()->set_localPosition(UnityEngine::Vector3(0.0f, localPosition1.y, localPosition1.z));
+    auto localPosition2 = rankText->get_rectTransform()->get_localPosition();
+    rankText->get_rectTransform()->set_localPosition(UnityEngine::Vector3(0.0f, localPosition2.y, localPosition2.z));
 
     auto immediateRankUIPanel = refs->coreGameHUDController->GetComponentInChildren<GlobalNamespace::ImmediateRankUIPanel*>();
 
