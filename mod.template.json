@@ -5,7 +5,7 @@
   "author": "Metalit, danrouse",
   "version": "${version}",
   "packageId": "com.beatgames.beatsaber",
-  "packageVersion": "1.20.0",
+  "packageVersion": "1.21.0",
   "description": "Store brand version of Counters+ for the Quest version of Beat Saber. Adds a variety of configurable Qounters to display statistics in-game.",
   "coverImage": "cover.png",
   "dependencies": [],
