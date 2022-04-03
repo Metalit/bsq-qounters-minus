@@ -50,14 +50,12 @@ void Qounters::CutQounter::Start() {
     auto xOffset = SeparateSaberCounts ? 20.0f + (12.0f * AveragePrecision) : 0.0f;
     auto yOffset = SeparateCutValues ? -60.0f : -30.0f;
 
-    leftCutText = QuestUI::BeatSaberUI::CreateText(gameObject->get_transform(), defaultText, false);
-    leftCutText->set_alignment(TMPro::TextAlignmentOptions::Center);
+    leftCutText = CreateBasicText(defaultText);
     leftCutText->set_fontSize(fontSize);
     leftCutText->set_lineSpacing(-40.0f);
     leftCutText->get_rectTransform()->set_anchoredPosition(UnityEngine::Vector2(xOffset * -1.0f, yOffset));
     if (SeparateSaberCounts) {
-        rightCutText = QuestUI::BeatSaberUI::CreateText(gameObject->get_transform(), defaultText, false);
-        rightCutText->set_alignment(TMPro::TextAlignmentOptions::Center);
+        rightCutText = CreateBasicText(defaultText);
         rightCutText->set_fontSize(fontSize);
         rightCutText->set_lineSpacing(-40.0f);
         rightCutText->get_rectTransform()->set_anchoredPosition(UnityEngine::Vector2(xOffset, yOffset));

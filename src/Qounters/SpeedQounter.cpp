@@ -51,11 +51,7 @@ float Average(System::Collections::Generic::List_1<float>* list) {
 void QountersMinus::Qounters::SpeedQounter::Start() {
     if (Mode != static_cast<int>(QountersMinus::SpeedQounterMode::Top5Sec)) {
         CreateBasicTitle("Average Speed");
-
-        averageText = QuestUI::BeatSaberUI::CreateText(gameObject->get_transform(), "0", false);
-        averageText->set_alignment(TMPro::TextAlignmentOptions::Center);
-        averageText->set_fontSize(35.0f);
-        averageText->get_rectTransform()->set_anchoredPosition(UnityEngine::Vector2(0.0f, -30.0f));
+        averageText = CreateBasicText("0");
     }
     if (Mode != static_cast<int>(QountersMinus::SpeedQounterMode::Average) && Mode != static_cast<int>(QountersMinus::SpeedQounterMode::SplitAverage)) {
         auto titleText = CreateBasicTitle("Recent Top Speed");
@@ -67,9 +63,7 @@ void QountersMinus::Qounters::SpeedQounter::Start() {
         }
         titleText->get_rectTransform()->set_anchoredPosition(UnityEngine::Vector2(0.0f, titleYOffset));
 
-        fastestText = QuestUI::BeatSaberUI::CreateText(gameObject->get_transform(), "0", false);
-        fastestText->set_alignment(TMPro::TextAlignmentOptions::Center);
-        fastestText->set_fontSize(35.0f);
+        fastestText = CreateBasicText("0");
         fastestText->get_rectTransform()->set_anchoredPosition(UnityEngine::Vector2(0.0f, textYOffset));
     }
 

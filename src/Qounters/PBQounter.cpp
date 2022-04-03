@@ -58,7 +58,7 @@ void QountersMinus::Qounters::PBQounter::Register() {
         .ptr = &UnderScore,
         .field = "UnderScore",
         .displayName = "Below Score Qounter",
-        .helpText = "Will the Personal Best counter instead be positioned below the Score Qounter?",
+        .helpText = "Will the Personal Best counter be positioned below the Score Qounter instead of based on the position settings?",
         .type = QounterRegistry::ConfigType::Bool,
     });
     QounterRegistry::RegisterConfig<PBQounter>({
@@ -83,10 +83,9 @@ void QountersMinus::Qounters::PBQounter::Start() {
     auto playerLevelStats = refs->playerData->GetPlayerLevelStatsData(refs->difficultyBeatmap);
     highScore = playerLevelStats->highScore;
 
-    pbText = QuestUI::BeatSaberUI::CreateText(gameObject->get_transform(), "", false);
+    pbText = CreateBasicTitle("");
     pbText->set_alignment(TMPro::TextAlignmentOptions::Top);
     pbText->set_fontSize(TextSize * 10.0f);
-    pbText->get_rectTransform()->set_anchoredPosition(UnityEngine::Vector2(0.0f, 0.0f));
 
     if (UnderScore) {
         auto scoreUIController = UnityEngine::Object::FindObjectOfType<GlobalNamespace::ScoreUIController*>();

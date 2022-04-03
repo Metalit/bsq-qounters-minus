@@ -11,6 +11,7 @@
 #include "GlobalNamespace/PlayerDataModel.hpp"
 #include "GlobalNamespace/PlayerData.hpp"
 #include "GlobalNamespace/PlayerSpecificSettings.hpp"
+#include "GlobalNamespace/GameplayModifiers.hpp"
 #include "GlobalNamespace/MultiplayerLocalActivePlayerFacade.hpp"
 #include "TMPro/FontStyles.hpp"
 

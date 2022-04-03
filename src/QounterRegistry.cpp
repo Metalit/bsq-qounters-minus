@@ -41,7 +41,9 @@ void logScales(UnityEngine::GameObject* go, std::string path) {
 void QountersMinus::QounterRegistry::Initialize() {
     for (auto&& def : registry) def.second.instance = nullptr;
     if (!Qounter::Enabled) return;
-    if (UnityEngine::Object::FindObjectOfType<PlayerDataModel*>()->playerData->playerSpecificSettings->noTextsAndHuds) return;
+    auto playerData = UnityEngine::Object::FindObjectOfType<PlayerDataModel*>();
+    if (playerData->playerData->playerSpecificSettings->noTextsAndHuds) return;
+    if (playerData->playerData->gameplayModifiers->zenMode) return;
 
     auto comboPanel = UnityEngine::GameObject::Find("ComboPanel");
     auto multiplierCanvas = UnityEngine::GameObject::Find("MultiplierCanvas");
@@ -84,15 +86,5 @@ void QountersMinus::QounterRegistry::Initialize() {
         LOG_DEBUG("Initialize " + key.first + "::" + key.second);
         auto systemType = il2cpp_utils::GetSystemType(key.first, key.second);
         def.instance = QountersMinus::Qounter::Initialize(systemType, static_cast<QountersMinus::QounterPosition>(position), distance);
-    }
-
-    if (Qounter::ItalicText) {
-        auto qounters = UnityEngine::Resources::FindObjectsOfTypeAll<Qounter*>();
-        for (auto& qounter : qounters) {
-            auto texts = qounter->GetComponentsInChildren<TMPro::TextMeshProUGUI*>();
-            for (auto& text : texts) {
-                text->set_fontStyle(TMPro::FontStyles::Italic);
-            }
-        }
     }
 }

@@ -117,12 +117,17 @@ TMPro::TextMeshProUGUI* QountersMinus::Qounter::CreateBasicTitle(std::string tex
     titleText->set_alignment(TMPro::TextAlignmentOptions::Center);
     titleText->set_fontSize(27.0f);
     titleText->get_rectTransform()->set_anchoredPosition(UnityEngine::Vector2(0.0f, 0.0f));
+    if(Qounter::ItalicText)
+        basicText->set_fontStyle(TMPro::FontStyles::Italic);
     return titleText;
 }
 
-void QountersMinus::Qounter::CreateBasicText(std::string text) {
+TMPro::TextMeshProUGUI* QountersMinus::Qounter::CreateBasicText(std::string text) {
     basicText = QuestUI::BeatSaberUI::CreateText(gameObject->get_transform(), text, false);
     basicText->set_alignment(TMPro::TextAlignmentOptions::Center);
     basicText->set_fontSize(35.0f);
     basicText->get_rectTransform()->set_anchoredPosition(UnityEngine::Vector2(0.0f, -30.0f));
+    if(Qounter::ItalicText)
+        basicText->set_fontStyle(TMPro::FontStyles::Italic);
+    return basicText;
 }

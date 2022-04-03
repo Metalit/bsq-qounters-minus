@@ -69,6 +69,6 @@ DECLARE_CLASS_CODEGEN(QountersMinus, Qounter, UnityEngine::MonoBehaviour,
 
     public:
         TMPro::TextMeshProUGUI* CreateBasicTitle(std::string text);
-        void CreateBasicText(std::string text);
+        TMPro::TextMeshProUGUI* CreateBasicText(std::string text);
         static Qounter* Initialize(System::Type* type, QountersMinus::QounterPosition position, float distance);
 )

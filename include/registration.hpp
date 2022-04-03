@@ -56,7 +56,7 @@ namespace QountersMinus {
             .ptr = &QountersMinus::Qounter::ItalicText,
             .field = "ItalicText",
             .displayName = "Use Italic Text",
-            .helpText = "Text elements will be italicized to match the base game.",
+            .helpText = "Text elements will be italicized.",
             .type = QounterRegistry::ConfigType::Bool,
         });
         QounterRegistry::RegisterConfig<Qounter>({
