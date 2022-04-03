@@ -76,7 +76,7 @@ void ConfigureBaseGameObject(UnityEngine::Transform* parent) {
 }
 
 void QountersMinus::Qounters::ProgressQounter::Start() {
-    if (Mode == static_cast<int>(QountersMinus::ProgressQounterMode::BaseGame)) return ConfigureBaseGameObject(get_transform());
+    if (Mode == static_cast<int>(QountersMinus::ProgressQounterMode::BaseGame)) return ConfigureBaseGameObject(gameObject->get_transform());
 
     CreateBasicText("0");
 
