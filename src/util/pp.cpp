@@ -1,25 +1,41 @@
 #include "util/pp.hpp"
 
-const int PP_CURVE_SIZE = 16;
+const int PP_CURVE_SIZE = 32;
 float ppCurve[PP_CURVE_SIZE][2] = {
     {0, 0},
-    {.45f, .015f},
-    {.50f, .03f},
-    {.55f, .06f},
-    {.60f, .105f},
-    {.65f, .16f},
-    {.68f, .24f},
-    {.70f, .285f},
-    {.80f, .563f},
-    {.84f, .695f},
-    {.88f, .826f},
-    {.945f, 1.015f},
-    {.95f, 1.046f},
-    {1.00f, 1.12f},
-    {1.10f, 1.18f},
-    {1.14f, 1.25f}
+    {.6f, .25f},
+    {.65f, .29f},
+    {.7f, .34f},
+    {.75f, .40f},
+    {.8f, .47f},
+    {.825f, .51f},
+    {.85f, .57f},
+    {.875f, .655f},
+    {.9f, .75f},
+    {.91f, .79f},
+    {.92f, .835f},
+    {.93f, 0.885f},
+    {.94f, 0.94f},
+    {.95f, 1.0f},
+    {.955f, 1.045f},
+    {.96f, 1.11f},
+    {.965f, 1.20f},
+    {.97f, 1.31f},
+    {.9725f, 1.37f},
+    {.975f, 1.45f},
+    {.9775f, 1.57f},
+    {.98f, 1.71f},
+    {.9825f, 1.88f},
+    {.985f, 2.1f},
+    {.9875f, 2.38f},
+    {.99f, 2.73f},
+    {.9925f, 3.17f},
+    {.995f, 3.76f},
+    {.9975f, 4.7f},
+    {.999f, 5.8f},
+    {1.0f, 7.0f}
 };
-float ppCurveSlopes[15];
+float ppCurveSlopes[31];
 static std::unordered_set<std::string> songsAllowingPositiveModifiers = {
     "2FDDB136BDA7F9E29B4CB6621D6D8E0F8A43B126", // Overkill Nuketime
     "27FCBAB3FB731B16EABA14A5D039EEFFD7BD44C9" // Overkill Kry
