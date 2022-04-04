@@ -59,8 +59,10 @@ void QountersMinus::QounterRegistry::Initialize() {
         }
     }
     if (Qounter::FixedHUDPosition && !hasRotations) {
-        auto hudParent = comboPanel->get_transform()->GetParent()->GetParent();
-        hudParent->set_position({hudParent->get_position().x, 0.4, hudParent->get_position().z});
+        auto comboPosition = comboPanel->get_transform()->get_position();
+        comboPanel->get_transform()->set_position({comboPosition.x, 1.8, comboPosition.z});
+        auto multiplierPosition = multiplierCanvas->get_transform()->get_position();
+        multiplierCanvas->get_transform()->set_position({multiplierPosition.x, 1.8, multiplierPosition.z});
     }
 
     if (Qounter::HideCombo) _DeactivateChildren(comboPanel);
