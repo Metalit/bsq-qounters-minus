@@ -46,12 +46,12 @@ void QountersMinus::Qounters::NotesLeftQounter::OnNoteMiss(GlobalNamespace::Note
 
 bool QountersMinus::Qounters::NotesLeftQounter::ShouldProcessNote(GlobalNamespace::NoteData* data) {
     switch (data->gameplayType) {
-    case GlobalNamespace::NoteData::GameplayType::Normal:
-        return true;
-    case GlobalNamespace::NoteData::GameplayType::BurstSliderHead:
-        return true;
-    default:
-        return false;
+        case GlobalNamespace::NoteData::GameplayType::Normal:
+            return true;
+        case GlobalNamespace::NoteData::GameplayType::BurstSliderHead:
+            return true;
+        default:
+            return false;
     }
 }
 

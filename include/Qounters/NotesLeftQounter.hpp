@@ -20,9 +20,9 @@ DECLARE_CLASS_CUSTOM(QountersMinus::Qounters, NotesLeftQounter, QountersMinus::Q
     DECLARE_INSTANCE_FIELD_DEFAULT(int, notesLeft, 0);
 
     DECLARE_STATIC_METHOD(void, Register);
+    DECLARE_STATIC_METHOD(bool, ShouldProcessNote, GlobalNamespace::NoteData* data);
     DECLARE_INSTANCE_METHOD(void, Start);
     DECLARE_INSTANCE_METHOD(void, OnNoteCut, GlobalNamespace::NoteData* data, GlobalNamespace::NoteCutInfo* info);
     DECLARE_INSTANCE_METHOD(void, OnNoteMiss, GlobalNamespace::NoteData* data);
-    DECLARE_INSTANCE_METHOD(bool, ShouldProcessNote, GlobalNamespace::NoteData* data);
     DECLARE_INSTANCE_METHOD(void, UpdateValue);
 )
