@@ -55,8 +55,6 @@ void QountersMinus::QounterSettingsViewController::DidActivate(bool firstActivat
     auto testButton = QuestUI::BeatSaberUI::CreateUIButton(get_transform(), "Test", "PlayButton", [&]() { StartTestLevel(this); });
     testButton->GetComponent<UnityEngine::RectTransform*>()->set_anchoredPosition(UnityEngine::Vector2(-52.0f, -30.0f));
     testButton->GetComponent<UnityEngine::RectTransform*>()->set_sizeDelta(UnityEngine::Vector2(27.0f, 10.0f));
-    testButton->set_interactable(false);
-    QuestUI::BeatSaberUI::AddHoverHint(testButton, "Disabled for now due to bugs");
 }
 
 void HandleBoolSettingChanged(QountersMinus::QounterRegistry::ConfigMetadata* meta, bool val) {
