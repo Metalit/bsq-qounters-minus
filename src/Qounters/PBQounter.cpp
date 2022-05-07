@@ -89,11 +89,11 @@ void QountersMinus::Qounters::PBQounter::Start() {
 
     if (UnderScore) {
         auto scoreUIController = UnityEngine::Object::FindObjectOfType<GlobalNamespace::ScoreUIController*>();
-        auto scorePosition = scoreUIController->scoreText->get_transform()->get_position();
-        pbText->get_transform()->set_position(UnityEngine::Vector3(scorePosition.x, scorePosition.y - 1.08f, scorePosition.z));
+        gameObject->get_transform()->SetParent(scoreUIController->scoreText->get_transform());
+        gameObject->get_transform()->set_localPosition(UnityEngine::Vector3(0, -30, 0));
     }
 
-    SetPersonalBest((float)highScore / maxPossibleScore);
+    SetPersonalBest((float) highScore / maxPossibleScore);
     OnScoreUpdated(0);
 }
 

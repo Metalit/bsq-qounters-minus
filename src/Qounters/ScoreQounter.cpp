@@ -114,6 +114,10 @@ void QountersMinus::Qounters::ScoreQounter::Start() {
     scoreUIText->get_transform()->SetParent(gameObject->get_transform(), true);
     refs->coreGameHUDController->relativeScoreGO->get_transform()->SetParent(scoreUIText->get_transform(), true);
     refs->coreGameHUDController->immediateRankGO->get_transform()->SetParent(scoreUIText->get_transform(), true);
+    
+    scoreUIText->set_enabled(true);
+    relativeScoreText->set_enabled(true);
+    rankText->set_enabled(true);
 
     if (!QountersMinus::Qounter::ItalicText) {
         scoreUIText->set_fontStyle(TMPro::FontStyles::Normal);

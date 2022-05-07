@@ -9,6 +9,7 @@
 #include "beatsaber-hook/shared/utils/hooking.hpp"
 
 #include "GlobalNamespace/CoreGameHUDController.hpp"
+#include "GlobalNamespace/CoreGameHUDController_InitData.hpp"
 #include "GlobalNamespace/ScoreController.hpp"
 #include "GlobalNamespace/NoteController.hpp"
 #include "GlobalNamespace/BeatmapObjectManager_NoteWasCutDelegate.hpp"
@@ -27,6 +28,8 @@ typedef System::Action_2<int, int>* ScoreChangeDelegate;
 MAKE_HOOK_MATCH(CoreGameHUDController_Start, &CoreGameHUDController::Start,
         void, CoreGameHUDController* self) {
     LOG_CALLER;
+
+    self->initData->advancedHUD = true;
 
     CoreGameHUDController_Start(self);
 

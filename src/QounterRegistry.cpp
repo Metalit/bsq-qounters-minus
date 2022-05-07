@@ -52,20 +52,23 @@ void QountersMinus::QounterRegistry::Initialize() {
     auto refs = comboPanel->AddComponent<QountersMinus::InjectedComponents*>();
     bool hasRotations = refs->beatmapCharacteristic->containsRotationEvents;
 
-    if (Qounter::DisableIn90Degree) {
-        if (hasRotations) {
-            UnityEngine::Object::Destroy(refs);
-            return;
-        }
+    // also kind of hacky imo
+    bool inMultiplayer = UnityEngine::Object::FindObjectOfType<GlobalNamespace::MultiplayerLocalActivePlayerFacade*>() != nullptr;
+
+    if (Qounter::DisableIn90Degree && hasRotations) {
+        UnityEngine::Object::Destroy(refs);
+        return;
     }
-    if (Qounter::FixedHUDPosition && !hasRotations) {
+
+    if (Qounter::FixedHUDPosition && !hasRotations && !inMultiplayer) {
         auto comboPosition = comboPanel->get_transform()->get_position();
         comboPanel->get_transform()->set_position({comboPosition.x, 1.8, comboPosition.z});
         auto multiplierPosition = multiplierCanvas->get_transform()->get_position();
         multiplierCanvas->get_transform()->set_position({multiplierPosition.x, 1.8, multiplierPosition.z});
     }
 
-    if (Qounter::HideCombo) _DeactivateChildren(comboPanel);
+    if (Qounter::HideCombo)
+        _DeactivateChildren(comboPanel);
     else if (Qounter::ItalicText) {
         for (auto& text : comboPanel->GetComponentsInChildren<TMPro::TextMeshProUGUI*>())
             text->set_fontStyle(TMPro::FontStyles::Italic);
@@ -74,7 +77,7 @@ void QountersMinus::QounterRegistry::Initialize() {
         multiplierCanvas->GetComponent<UnityEngine::Animator*>()->set_enabled(false);
         _DeactivateChildren(multiplierCanvas);
     }
-    if (Qounter::UprightInMultiplayer && UnityEngine::Object::FindObjectOfType<GlobalNamespace::MultiplayerLocalActivePlayerFacade*>()) {
+    if (Qounter::UprightInMultiplayer && inMultiplayer) {
         UnityEngine::Transform* transforms[4] = {
             comboPanel->get_transform(),
             multiplierCanvas->get_transform(),
@@ -85,8 +88,29 @@ void QountersMinus::QounterRegistry::Initialize() {
             transform->set_eulerAngles(UnityEngine::Vector3::get_zero());
             auto position = transform->get_localPosition();
             transform->set_localPosition(UnityEngine::Vector3(position.x, position.y + 1.8f, position.z + 4.0f));
-            transform->get_gameObject()->SetActive(true);
         }
+        // set score and timer to original positions
+        auto timerPosition = transforms[3]->get_localPosition();
+        transforms[3]->set_localPosition(UnityEngine::Vector3(timerPosition.x + 2.0f, timerPosition.y - 1.0f, timerPosition.z));
+        // enable texts
+        auto scoreUIText = refs->coreGameHUDController->GetComponentInChildren<GlobalNamespace::ScoreUIController*>()->scoreText;
+        auto relativeScoreText = refs->coreGameHUDController->relativeScoreGO->GetComponentInChildren<TMPro::TextMeshProUGUI*>();
+        auto rankText = refs->coreGameHUDController->immediateRankGO->GetComponent<TMPro::TextMeshProUGUI*>();
+        scoreUIText->set_enabled(true);
+        relativeScoreText->set_enabled(true);
+        rankText->set_enabled(true);
+        auto scoreTextTransform = scoreUIText->get_transform();
+        // set lower texts as children of the main score text
+        refs->coreGameHUDController->relativeScoreGO->get_transform()->SetParent(scoreTextTransform, true);
+        refs->coreGameHUDController->immediateRankGO->get_transform()->SetParent(scoreTextTransform, true);
+        // move main score text to correct position, ensuring to only change its position
+        auto comboPanel = refs->coreGameHUDController->get_gameObject()->Find("ComboPanel");
+        scoreTextTransform->SetParent(comboPanel->get_transform(), true);
+        auto position = scoreTextTransform->GetParent()->get_position();
+        scoreTextTransform->set_position(UnityEngine::Vector3(position.x, position.y - 0.5, position.z));
+    }
+
+    if (inMultiplayer) {
     }
 
     for (auto key : registryInsertionOrder) {

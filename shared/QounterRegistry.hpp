@@ -13,6 +13,7 @@
 #include "GlobalNamespace/PlayerSpecificSettings.hpp"
 #include "GlobalNamespace/GameplayModifiers.hpp"
 #include "GlobalNamespace/MultiplayerLocalActivePlayerFacade.hpp"
+#include "GlobalNamespace/ScoreUIController.hpp"
 #include "TMPro/FontStyles.hpp"
 
 struct pair_hash {
