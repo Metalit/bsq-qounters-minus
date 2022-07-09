@@ -26,8 +26,8 @@ bool QountersMinus::LoadConfig() {
     auto customQounterConfig = getConfig().config["CustomCounters"].GetObject();
 
     for (auto def : QountersMinus::QounterRegistry::registry) {
-        rapidjson::GenericValue<rapidjson::UTF8<>> _childConfig = (def.second.isBaseQounter ? getConfig().config[def.second.configKey] : customQounterConfig[def.second.configKey]).GetObject();
-        auto&& jsonConfigObj = def.second.configKey == "" ? getConfig().config : _childConfig;
+        auto _childConfig = (def.second.isBaseQounter ? getConfig().config[def.second.configKey] : customQounterConfig[def.second.configKey]).GetObject();
+        auto&& jsonConfigObj = def.second.configKey == "" ? getConfig().config.GetObject() : _childConfig;
         if (def.second.configKey != "") {
             if (def.second.isBaseQounter && (!getConfig().config.HasMember(def.second.configKey) || !getConfig().config[def.second.configKey].IsObject())) {
                 LOG_DEBUG("Config object not found: " + def.second.configKey);

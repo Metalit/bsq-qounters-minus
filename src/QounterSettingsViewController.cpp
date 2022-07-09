@@ -76,7 +76,7 @@ void HandleEnumSettingChanged(QountersMinus::QounterRegistry::ConfigMetadata* me
     QountersMinus::SaveConfig();
     reinterpret_cast<QuestUI::IncrementSetting*>(meta->uiElementPtr)->Text->SetText(meta->enumDisplayNames[intVal]);
 }
-void HandleColorSettingChanged(QountersMinus::QounterRegistry::ConfigMetadata* meta, UnityEngine::Color val, GlobalNamespace::ColorChangeUIEventType eventType) {
+void HandleColorSettingChanged(QountersMinus::QounterRegistry::ConfigMetadata* meta, UnityEngine::Color val) {
     *(UnityEngine::Color*)meta->ptr = val;
     QountersMinus::SaveConfig();
 }
@@ -149,12 +149,13 @@ void QountersMinus::QounterSettingsViewController::CreateQounterConfigView(
             increment->Text->SetText(fieldConfig->enumDisplayNames[*(int*)fieldConfig->ptr]);
             gameObject = increment->get_gameObject();
         } else if (fieldConfig->type == QountersMinus::QounterRegistry::ConfigType::Color) {
-            gameObject = QuestUI::BeatSaberUI::CreateColorPicker(
+            auto colorPicker = QuestUI::BeatSaberUI::CreateColorPicker(
                 container->get_transform(),
                 label,
                 *(UnityEngine::Color*)fieldConfig->ptr,
-                [=](UnityEngine::Color val, GlobalNamespace::ColorChangeUIEventType type) { HandleColorSettingChanged(fieldConfig.get(), val, type); }
+                [=](UnityEngine::Color val) { HandleColorSettingChanged(fieldConfig.get(), val); }
             );
+            gameObject = colorPicker->get_gameObject();
         } else {
             // TODO (minor)
             // LOG_DEBUG("Cannot create setting UI for unknown type \"" + (int)fieldConfig->type + "\"");
