@@ -45,14 +45,20 @@ void QountersMinus::Qounters::NotesLeftQounter::OnNoteMiss(GlobalNamespace::Note
 }
 
 bool QountersMinus::Qounters::NotesLeftQounter::ShouldProcessNote(GlobalNamespace::NoteData* data) {
+    bool shouldProcess = false;
     switch (data->gameplayType) {
         case GlobalNamespace::NoteData::GameplayType::Normal:
-            return true;
+            shouldProcess = true;
+            break;
         case GlobalNamespace::NoteData::GameplayType::BurstSliderHead:
-            return true;
+            shouldProcess = true;
+            break;
         default:
-            return false;
+            break;
     }
+    if (!GetHasCJD())
+        return shouldProcess;
+    return shouldProcess && IsRealNote(data);
 }
 
 void QountersMinus::Qounters::NotesLeftQounter::UpdateValue() {

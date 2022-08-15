@@ -88,7 +88,11 @@ void QountersMinus::Qounters::PBQounter::Start() {
     pbText->set_fontSize(TextSize * 10.0f);
 
     if (UnderScore) {
-        auto scoreUIController = UnityEngine::Object::FindObjectOfType<GlobalNamespace::ScoreUIController*>();
+        auto scoreUIController = UnityEngine::Resources::FindObjectsOfTypeAll<GlobalNamespace::ScoreUIController*>().FirstOrDefault();
+        if (!scoreUIController) {
+            gameObject->SetActive(false);
+            return;
+        }
         gameObject->get_transform()->SetParent(scoreUIController->scoreText->get_transform());
         gameObject->get_transform()->set_localPosition(UnityEngine::Vector3(0, -30, 0));
     }

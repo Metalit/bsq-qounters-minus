@@ -3,6 +3,7 @@
 #include "util/logger.hpp"
 #include "util/format.hpp"
 #include "util/note_count.hpp"
+#include "util/cjd.hpp"
 #include "Qounter.hpp"
 #include "QounterRegistry.hpp"
 
