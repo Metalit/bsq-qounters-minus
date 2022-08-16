@@ -1,5 +1,9 @@
 name: Build mod and create release
 
+env:
+    module_id: qounters-minus
+    qmodName: Qounters-
+
 on:
   push:
     tags:
