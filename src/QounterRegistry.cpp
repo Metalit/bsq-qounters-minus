@@ -39,7 +39,7 @@ void logScales(UnityEngine::GameObject* go, std::string path) {
 }
 
 void QountersMinus::QounterRegistry::Initialize() {
-    for (auto&& def : registry) def.second.instance = nullptr;
+    for (auto&& def : registry) def.second.instance = {};
     if (!Qounter::Enabled) return;
     auto playerData = UnityEngine::Object::FindObjectOfType<PlayerDataModel*>();
     if (playerData->playerData->playerSpecificSettings->noTextsAndHuds) return;

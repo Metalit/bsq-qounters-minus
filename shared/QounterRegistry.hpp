@@ -66,7 +66,7 @@ namespace QountersMinus {
                 void* uiElementPtr; // yuck yuck ew yuck
             };
             struct RegistryEntry {
-                QountersMinus::Qounter* instance = nullptr;
+                SafePtrUnity<QountersMinus::Qounter> instance = {};
                 std::unordered_map<Event, const MethodInfo*> eventHandlers;
                 std::string shortName;
                 std::string longName;
@@ -92,14 +92,24 @@ namespace QountersMinus {
                         {"Distance", &T::Distance}
                     };
                 }
-                registry[{klass->namespaze, klass->name}] = {
-                    .eventHandlers = eventHandlers,
-                    .shortName = shortName,
-                    .longName = longName,
-                    .configKey = configKey,
-                    .staticFieldRefs = staticFieldRefs,
-                    .isBaseQounter = isBaseQounter
-                };
+                registry.emplace(std::pair<std::pair<std::string, std::string>, RegistryEntry>(
+                    {klass->namespaze, klass->name}, {
+                        .eventHandlers = eventHandlers,
+                        .shortName = shortName,
+                        .longName = longName,
+                        .configKey = configKey,
+                        .staticFieldRefs = staticFieldRefs,
+                        .isBaseQounter = isBaseQounter
+                    }
+                ));
+                // registry[{klass->namespaze, klass->name}] = {
+                //     .eventHandlers = eventHandlers,
+                //     .shortName = shortName,
+                //     .longName = longName,
+                //     .configKey = configKey,
+                //     .staticFieldRefs = staticFieldRefs,
+                //     .isBaseQounter = isBaseQounter
+                // };
                 if constexpr (!std::is_same_v<T, QountersMinus::Qounter>) {
                     RegisterConfig<T>({
                         .ptr = staticFieldRefs["Enabled"],
@@ -141,7 +151,7 @@ namespace QountersMinus {
             static void BroadcastEvent(Event event, TArgs&&... args) {
                 for (auto def : registry) {
                     if (def.second.instance && def.second.eventHandlers[event]) {
-                        il2cpp_utils::RunMethodUnsafe(def.second.instance, def.second.eventHandlers[event], args...);
+                        il2cpp_utils::RunMethodUnsafe(def.second.instance.ptr(), def.second.eventHandlers[event], args...);
                     }
                 }
             }
