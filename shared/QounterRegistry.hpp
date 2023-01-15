@@ -66,7 +66,7 @@ namespace QountersMinus {
                 void* uiElementPtr; // yuck yuck ew yuck
             };
             struct RegistryEntry {
-                SafePtrUnity<QountersMinus::Qounter> instance = {};
+                SafePtrUnity<QountersMinus::Qounter> instance = nullptr;
                 std::unordered_map<Event, const MethodInfo*> eventHandlers;
                 std::string shortName;
                 std::string longName;
@@ -102,14 +102,6 @@ namespace QountersMinus {
                         .isBaseQounter = isBaseQounter
                     }
                 ));
-                // registry[{klass->namespaze, klass->name}] = {
-                //     .eventHandlers = eventHandlers,
-                //     .shortName = shortName,
-                //     .longName = longName,
-                //     .configKey = configKey,
-                //     .staticFieldRefs = staticFieldRefs,
-                //     .isBaseQounter = isBaseQounter
-                // };
                 if constexpr (!std::is_same_v<T, QountersMinus::Qounter>) {
                     RegisterConfig<T>({
                         .ptr = staticFieldRefs["Enabled"],
