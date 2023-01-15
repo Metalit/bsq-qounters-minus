@@ -66,7 +66,7 @@ namespace QountersMinus {
                 void* uiElementPtr; // yuck yuck ew yuck
             };
             struct RegistryEntry {
-                SafePtrUnity<QountersMinus::Qounter> instance = nullptr;
+                QountersMinus::Qounter* instance = nullptr;
                 std::unordered_map<Event, const MethodInfo*> eventHandlers;
                 std::string shortName;
                 std::string longName;
@@ -143,7 +143,7 @@ namespace QountersMinus {
             static void BroadcastEvent(Event event, TArgs&&... args) {
                 for (auto def : registry) {
                     if (def.second.instance && def.second.eventHandlers[event]) {
-                        il2cpp_utils::RunMethodUnsafe(def.second.instance.ptr(), def.second.eventHandlers[event], args...);
+                        il2cpp_utils::RunMethodUnsafe(def.second.instance, def.second.eventHandlers[event], args...);
                     }
                 }
             }
