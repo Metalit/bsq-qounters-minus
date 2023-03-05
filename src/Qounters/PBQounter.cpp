@@ -117,7 +117,8 @@ void QountersMinus::Qounters::PBQounter::OnScoreUpdated(int modifiedScore) {
     }
 
     if (Mode == static_cast<int>(PBQounterMode::Relative)) {
-        if (refs->relativeScoreAndImmediateRankCounter->relativeScore > ((float)highScore / maxPossibleScore)) {
+        float immediateMaxScore = refs->scoreController->immediateMaxPossibleModifiedScore;
+        if (modifiedScore / immediateMaxScore > highScore / (float)maxPossibleScore) {
             pbText->set_color(BetterColor);
         } else {
             pbText->set_color(DefaultColor);
