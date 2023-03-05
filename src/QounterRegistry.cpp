@@ -24,10 +24,14 @@ void _DeactivateChildren(std::string gameObjectName) {
 }
 
 
-void logScales(UnityEngine::GameObject* go, std::string path) {
+void logScales(UnityEngine::GameObject* go, std::string path="") {
     auto name = path + "/" + static_cast<std::string>(go->get_name());
     auto scale = go->get_transform()->get_localScale();
-    LOG_DEBUG(name + ": %.2f, %.2f, %.2f", scale.x, scale.y, scale.z);
+    auto pos = go->get_transform()->get_localPosition();
+    auto rot = go->get_transform()->get_localRotation().get_eulerAngles();
+    LOG_DEBUG(name + " position: %.2f, %.2f, %.2f", pos.x, pos.y, pos.z);
+    LOG_DEBUG("  rotation: %.2f, %.2f, %.2f", rot.x, rot.y, rot.z);
+    LOG_DEBUG("  scale: %.2f, %.2f, %.2f", scale.x, scale.y, scale.z);
 
     if (go->get_transform()->get_parent()) {
         logScales(go->get_transform()->get_parent()->get_gameObject(), name);
@@ -46,7 +50,9 @@ void QountersMinus::QounterRegistry::Initialize() {
     if (playerData->playerData->gameplayModifiers->zenMode) return;
 
     auto comboPanel = UnityEngine::GameObject::Find("ComboPanel");
+    auto scoreCanvas = UnityEngine::GameObject::Find("ScoreCanvas");
     auto multiplierCanvas = UnityEngine::GameObject::Find("MultiplierCanvas");
+    auto progressCanvas = UnityEngine::GameObject::Find("SongProgressCanvas");
 
     // hacky way of getting BeatmapCharacteristic
     auto refs = comboPanel->AddComponent<QountersMinus::InjectedComponents*>();
@@ -61,10 +67,20 @@ void QountersMinus::QounterRegistry::Initialize() {
     }
 
     if (Qounter::FixedHUDPosition && !hasRotations && !inMultiplayer) {
-        auto comboPosition = comboPanel->get_transform()->get_position();
-        comboPanel->get_transform()->set_position({comboPosition.x, 1.8, comboPosition.z});
-        auto multiplierPosition = multiplierCanvas->get_transform()->get_position();
-        multiplierCanvas->get_transform()->set_position({multiplierPosition.x, 1.8, multiplierPosition.z});
+        auto leftPanel = comboPanel->get_transform()->GetParent();
+        auto rightPanel = multiplierCanvas->get_transform()->GetParent();
+        auto guiParent = leftPanel->GetParent();
+        guiParent->SetPositionAndRotation({0, 0, 0}, UnityEngine::Quaternion::get_identity());
+        guiParent->set_localScale({1, 1, 1});
+        auto lossyScale = guiParent->get_lossyScale();
+        guiParent->set_localScale({1/lossyScale.x, 1/lossyScale.y, 1/lossyScale.z});
+        float xDist = guiParent->get_name() == "NarrowGameHUD" ? 2 : 3.2;
+        leftPanel->set_localPosition({-xDist, 0.4, 7});
+        rightPanel->set_localPosition({xDist, 0.4, 7});
+        comboPanel->get_transform()->set_localPosition({0, 1.43, 0});
+        scoreCanvas->get_transform()->set_localPosition({0, 0.4, 0});
+        multiplierCanvas->get_transform()->set_localPosition({0, 1.3, 0});
+        progressCanvas->get_transform()->set_localPosition({0, 0.4, 0});
     }
 
     if (Qounter::HideCombo)
@@ -80,18 +96,16 @@ void QountersMinus::QounterRegistry::Initialize() {
     if (Qounter::UprightInMultiplayer && inMultiplayer) {
         UnityEngine::Transform* transforms[4] = {
             comboPanel->get_transform(),
+            scoreCanvas->get_transform(),
             multiplierCanvas->get_transform(),
-            UnityEngine::GameObject::Find("ScoreCanvas")->get_transform(),
-            UnityEngine::GameObject::Find("SongProgressCanvas")->get_transform()
+            progressCanvas->get_transform()
         };
-        for (auto transform : transforms) {
-            transform->set_eulerAngles(UnityEngine::Vector3::get_zero());
-            auto position = transform->get_localPosition();
-            transform->set_localPosition(UnityEngine::Vector3(position.x, position.y + 1.8f, position.z + 4.0f));
-        }
-        // set score and timer to original positions
-        auto timerPosition = transforms[3]->get_localPosition();
-        transforms[3]->set_localPosition(UnityEngine::Vector3(timerPosition.x + 2.0f, timerPosition.y - 1.0f, timerPosition.z));
+        for (auto transform : transforms)
+            transform->set_rotation(UnityEngine::Quaternion::get_identity());
+        transforms[0]->set_localPosition({-2, 1.8, 7});
+        transforms[1]->set_localPosition({-2, 0.9, 7});
+        transforms[2]->set_localPosition({2, 1.8, 7});
+        transforms[3]->set_localPosition({2, 0.9, 7});
         // enable texts
         auto scoreUIText = refs->coreGameHUDController->GetComponentInChildren<GlobalNamespace::ScoreUIController*>()->scoreText;
         auto relativeScoreText = refs->coreGameHUDController->relativeScoreGO->GetComponentInChildren<TMPro::TextMeshProUGUI*>();
@@ -99,18 +113,6 @@ void QountersMinus::QounterRegistry::Initialize() {
         scoreUIText->set_enabled(true);
         relativeScoreText->set_enabled(true);
         rankText->set_enabled(true);
-        auto scoreTextTransform = scoreUIText->get_transform();
-        // set lower texts as children of the main score text
-        refs->coreGameHUDController->relativeScoreGO->get_transform()->SetParent(scoreTextTransform, true);
-        refs->coreGameHUDController->immediateRankGO->get_transform()->SetParent(scoreTextTransform, true);
-        // move main score text to correct position, ensuring to only change its position
-        auto comboPanel = refs->coreGameHUDController->get_gameObject()->Find("ComboPanel");
-        scoreTextTransform->SetParent(comboPanel->get_transform(), true);
-        auto position = scoreTextTransform->GetParent()->get_position();
-        scoreTextTransform->set_position(UnityEngine::Vector3(position.x, position.y - 0.5, position.z));
-    }
-
-    if (inMultiplayer) {
     }
 
     for (auto key : registryInsertionOrder) {
