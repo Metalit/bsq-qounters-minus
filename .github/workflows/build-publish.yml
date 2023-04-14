@@ -37,8 +37,8 @@ jobs:
           regex: ^release.*?((?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)?):?\W*(.*)
           flags: i
 
-      - name: QPM Rust Action
-        uses: Fernthedev/qpm-rust-action@main
+      - name: QPM Action
+        uses: Fernthedev/qpm-action@main
         with:
           workflow_token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -53,8 +53,6 @@ jobs:
           ls -la ${GITHUB_WORKSPACE}/extern/includes
           echo libs:
           ls -la ${GITHUB_WORKSPACE}/extern/libs
-          echo cache:
-          ls -la $HOME/.local/share/QPM-Rust/cache
 
       - name: Build
         run: |
@@ -101,7 +99,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: QPM Publish
-        uses: Fernthedev/qpm-rust-action@main
+        uses: Fernthedev/qpm-action@main
         with:
           workflow_token: ${{ secrets.GITHUB_TOKEN }}
 
