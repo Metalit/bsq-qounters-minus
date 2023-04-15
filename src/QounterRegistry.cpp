@@ -67,6 +67,8 @@ void QountersMinus::QounterRegistry::Initialize() {
     }
 
     if (Qounter::FixedHUDPosition && !hasRotations && !inMultiplayer) {
+        auto energyBar = refs->coreGameHUDController->energyPanelGO->get_transform();
+        auto energyPos = energyBar->get_position();
         auto leftPanel = comboPanel->get_transform()->GetParent();
         auto rightPanel = multiplierCanvas->get_transform()->GetParent();
         auto guiParent = leftPanel->GetParent();
@@ -81,6 +83,7 @@ void QountersMinus::QounterRegistry::Initialize() {
         scoreCanvas->get_transform()->set_localPosition({0, 0.4, 0});
         multiplierCanvas->get_transform()->set_localPosition({0, 1.3, 0});
         progressCanvas->get_transform()->set_localPosition({0, 0.4, 0});
+        energyBar->set_position(energyPos);
     }
 
     if (Qounter::HideCombo)
