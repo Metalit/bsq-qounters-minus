@@ -40,7 +40,7 @@ float ppCurve[PP_CURVE_SIZE][2] = {
     {0.9995, 5.019543595874787},
     {1.0, 5.367394282890631}
 };
-float ppCurveSlopes[31];
+float ppCurveSlopes[36];
 static std::unordered_set<std::string> songsAllowingPositiveModifiers = {
     "2FDDB136BDA7F9E29B4CB6621D6D8E0F8A43B126", // Overkill Nuketime
     "27FCBAB3FB731B16EABA14A5D039EEFFD7BD44C9" // Overkill Kry
